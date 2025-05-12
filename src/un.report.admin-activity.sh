@@ -34,6 +34,9 @@ function main() {
 	local mailDest=${CONFIG[EMAIL]}
 	local mailSubj=${CONFIG[SUBJECT]}
 	local timeFrame=${CONFIG[TIME_FRAME]}
+	local sendReport=${CONFIG[SEND_REPORT]}
+	local logReport=${CONFIG[LOG_REPORT]}
+	local logFile="${SCRIPT_NAME}.log"
 	local report=
 	local sudoUse=()
 	local rootLogins=()
@@ -75,7 +78,16 @@ function main() {
 	for item in "${sshLogins[@]}"; do
 		report+="${item}\n"
 	done
-
 	# send report
-	echo -e ${report} | mail -s "${mailSubj}" "${mailDest}"
+	if ((sendReport)); then
+		echo -e ${report} | mail -s "${mailSubj}" "${mailDest}" \
+		&& echo "Successfully sent mail report to ${mailDest}"
+	fi
+	# log report
+	if ((logReport)); then
+		echo "${report}" >> ${logFile} \
+		&& echo "Successfully written report to ${logFile}"
+	fi
 }
+
+main
