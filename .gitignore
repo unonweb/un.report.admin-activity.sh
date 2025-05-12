@@ -1,3 +1,4 @@
 .fk.report-admin.service
 .fk.report-admin.timer
 src/config.ini
+src/*.log
